@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  # Base de datos MongoDB
+  mongodb:
+    image: mongo:6.0
+    container_name: adoptme-mongodb
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: admin123
+    volumes:
+      - mongo_data:/data/db
+
+  # Aplicación Node.js desde Docker Hub
+  app:
+    image: TUNOMBRE/adoptme:1.0.0  # ← REEMPLAZAR CON TU USUARIO
+    container_name: adoptme-app
+    ports:
+      - "8080:8080"
+    environment:
+      NODE_ENV: production
+      PORT: 8080
+      MONGO_URI: mongodb://admin:admin123@mongodb:27017/adoptme?authSource=admin
+      JWT_SECRET: cambia_esta_clave_secreta_por_una_segura
+      JWT_EXPIRES_IN: 1h
+    depends_on:
+      - mongodb
+
+volumes:
+  mongo_data:
