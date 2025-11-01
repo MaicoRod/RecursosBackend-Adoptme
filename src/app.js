@@ -12,7 +12,7 @@ import { errorHandler, notFoundHandler } from './middlewares/errorHandler.js';
 
 const app = express();
 const PORT = process.env.PORT||8080;
-mongoose.connect(`mongodb+srv://maicoer543_db_user:52F3n0LNg37pjrVw@cluster0.o2tb2ef.mongodb.net/?appName=Cluster0`)
+mongoose.connect(`url de mongo`)
 
 .then(()=> { console.log('Base de datos conectada correctamente')})
 .catch((error)=> {console.error('Error al conectar a la base de datos', error.message);
