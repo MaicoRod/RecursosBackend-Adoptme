@@ -13,6 +13,9 @@ RUN npm install
 # Copiar todo el código
 COPY . .
 
+# Crear directorio para imágenes si no existe
+RUN mkdir -p public/img
+
 # Puerto de la aplicación
 EXPOSE 8080
 

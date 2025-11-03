@@ -1,0 +1,239 @@
+paths:
+  /api/users:
+    get:
+      summary: Obtener todos los usuarios
+      tags:
+        - Users
+      description: Retorna la lista completa de usuarios registrados en el sistema
+      responses:
+        200:
+          description: Lista de usuarios obtenida exitosamente
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  payload:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/User'
+        500:
+          description: Error del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /api/users/{uid}:
+    get:
+      summary: Obtener un usuario por ID
+      tags:
+        - Users
+      description: Retorna la información de un usuario específico
+      parameters:
+        - in: path
+          name: uid
+          required: true
+          schema:
+            type: string
+          description: ID del usuario
+          example: 507f1f77bcf86cd799439011
+      responses:
+        200:
+          description: Usuario encontrado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  payload:
+                    $ref: '#/components/schemas/User'
+        404:
+          description: Usuario no encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                status: error
+                error:
+                  code: USER_NOT_FOUND
+                  message: User not found
+        400:
+          description: ID inválido
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                status: error
+                error:
+                  code: INVALID_ID
+                  message: Invalid ID format
+
+    put:
+      summary: Actualizar un usuario
+      tags:
+        - Users
+      description: Actualiza la información de un usuario existente
+      parameters:
+        - in: path
+          name: uid
+          required: true
+          schema:
+            type: string
+          description: ID del usuario
+          example: 507f1f77bcf86cd799439011
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                first_name:
+                  type: string
+                  example: Juan Carlos
+                last_name:
+                  type: string
+                  example: Pérez García
+                email:
+                  type: string
+                  format: email
+                  example: juancarlos@example.com
+                role:
+                  type: string
+                  enum: [user, admin]
+                  example: user
+      responses:
+        200:
+          description: Usuario actualizado exitosamente
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: User updated
+        404:
+          description: Usuario no encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        400:
+          description: Datos inválidos
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    delete:
+      summary: Eliminar un usuario
+      tags:
+        - Users
+      description: Elimina un usuario del sistema
+      parameters:
+        - in: path
+          name: uid
+          required: true
+          schema:
+            type: string
+          description: ID del usuario
+          example: 507f1f77bcf86cd799439011
+      responses:
+        200:
+          description: Usuario eliminado exitosamente
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: User deleted
+        404:
+          description: Usuario no encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        400:
+          description: ID inválido
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        _id:
+          type: string
+          description: ID único del usuario
+          example: 507f1f77bcf86cd799439011
+        first_name:
+          type: string
+          description: Nombre del usuario
+          example: Juan
+        last_name:
+          type: string
+          description: Apellido del usuario
+          example: Pérez
+        email:
+          type: string
+          format: email
+          description: Email del usuario
+          example: juan.perez@example.com
+        password:
+          type: string
+          description: Contraseña encriptada
+          example: $2b$10$abcdefghijk...
+        role:
+          type: string
+          enum: [user, admin]
+          description: Rol del usuario
+          example: user
+        pets:
+          type: array
+          items:
+            type: object
+            properties:
+              _id:
+                type: string
+                example: 507f1f77bcf86cd799439012
+          description: Array de IDs de mascotas adoptadas
+
+    Error:
+      type: object
+      properties:
+        status:
+          type: string
+          example: error
+        error:
+          type: object
+          properties:
+            code:
+              type: string
+              example: USER_NOT_FOUND
+            message:
+              type: string
+              example: User not found
+            details:
+              type: object
+              description: Información adicional sobre el error
