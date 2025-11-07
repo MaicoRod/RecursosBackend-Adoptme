@@ -1,23 +1,20 @@
-# Imagen base de Node.js
+# Usar Node.js como imagen base
 FROM node:18-alpine
 
-# Directorio de trabajo
+# Establecer el directorio de trabajo
 WORKDIR /app
 
-# Copiar archivos de dependencias
+# Copiar package.json y package-lock.json
 COPY package*.json ./
 
 # Instalar dependencias
 RUN npm install
 
-# Copiar todo el código
+# Copiar el resto del código
 COPY . .
 
-# Crear directorio para imágenes si no existe
-RUN mkdir -p public/img
-
-# Puerto de la aplicación
+# Exponer el puerto
 EXPOSE 8080
 
-# Comando para iniciar
+# Comando para iniciar la aplicación
 CMD ["npm", "start"]

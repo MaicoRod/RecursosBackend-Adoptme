@@ -54,7 +54,7 @@ const login = async (req, res, next) => {
         }
 
         const userDto = UserDTO.getUserTokenFrom(user);
-        const token = jwt.sign(userDto, 'tokenSecretJWT', { expiresIn: "1h" });
+        const token = jwt.sign(userDto, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES || "1h" });
         res.cookie('coderCookie', token, { maxAge: 3600000 }).send({ status: "success", message: "Logged in" })
 
     } catch (error) {
@@ -71,7 +71,7 @@ const current = async (req, res, next) => {
         }
 
         try {
-            const user = jwt.verify(cookie, 'tokenSecretJWT');
+            const user = jwt.verify(cookie, process.env.JWT_SECRET);
             return res.send({ status: "success", payload: user })
         } catch (jwtError) {
             throw new CustomError(errorCodes.AUTH_INVALID_TOKEN);
@@ -99,7 +99,7 @@ const unprotectedLogin = async (req, res, next) => {
         }
 
         const userDto = UserDTO.getUserTokenFrom(user);
-        const token = jwt.sign(userDto, 'tokenSecretJWT', { expiresIn: "1h" });
+        const token = jwt.sign(userDto, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES || "1h" });
         res.cookie('unprotectedCookie', token, { maxAge: 3600000 }).send({ status: "success", message: "Unprotected Logged in" })
 
     } catch (error) {
@@ -114,7 +114,7 @@ const unprotectedCurrent = async (req, res, next) => {
             throw new CustomError(errorCodes.AUTH_MISSING_TOKEN);
         }
 
-        const user = jwt.verify(cookie, 'tokenSecretJWT');
+        const user = jwt.verify(cookie, process.env.JWT_SECRET);
         return res.send({ status: "success", payload: user })
 
     } catch (error) {

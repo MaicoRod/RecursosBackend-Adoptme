@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  # Aplicación Node.js desde Docker Hub
+  app:
+    image: tuusuario/adoptme:1.0.0
+    container_name: adoptme-app
+    ports:
+      - "8080:8080"
+    environment:
+      NODE_ENV: production
+      PORT: 8080
+      MONGO_URL: url_proporcionada_por_mongo_atlas
+      JWT_SECRET: cambia_esta_clave_secreta_por_una_segura
+      JWT_EXPIRES_IN: 1h

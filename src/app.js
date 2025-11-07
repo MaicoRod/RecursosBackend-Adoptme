@@ -1,3 +1,6 @@
+import dotenv from 'dotenv';
+dotenv.config();
+
 import express from 'express';
 import mongoose from 'mongoose';
 import cookieParser from 'cookie-parser';
@@ -13,7 +16,8 @@ import { setupSwagger } from './config/swagger.config.js';
 
 const app = express();
 const PORT = process.env.PORT||8080;
-mongoose.connect(`mongodb+srv://maicoer543_db_user:rgcKvNpfS8ftJPX5@cluster0.o2tb2ef.mongodb.net/?appName=Cluster0`)
+console.log(process.env.MONGO_URL)
+mongoose.connect(process.env.MONGO_URL)
 
 .then(()=> { console.log('Base de datos conectada correctamente')})
 .catch((error)=> {console.error('Error al conectar a la base de datos', error.message);
